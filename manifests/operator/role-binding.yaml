@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kanidm-operator
+rules:
+  - verbs:
+      - get
+      - list
+      - watch
+    apiGroups:
+      - kanidm.github.io
+    resources: ["accounts", "groups", "oauthclients"]
