@@ -11,6 +11,7 @@ packages = [{include = "kanidm_operator"}]
 python = "^3.11"
 kubernetes = "^28.1.0"
 tomli = "^2.0.1"
+kanidm = "^0.0.3"
 
 [tool.poetry.group.dev.dependencies]
 pylama = "^8.4.1"

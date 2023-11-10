@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kanidm-db
+  namespace: {{ namespace }}
+  labels:
+    app.kubernetes.io/name: kanidm-db
+    app.kubernetes.io/instance: kanidm-db
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: kanidm-operator
+    app.kubernetes.io/component: pvc-db
+    app.kubernetes.io/part-of: kanidm
+    app.kubernetes.io/created-by: kanidm-operator
+spec:
+  storageClassName: {{ db_storage_class }}
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ db_storage_size }}

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kanidm-svc
+  namespace: {{ namespace }}
+  labels:
+    app.kubernetes.io/name: kanidm-svc
+    app.kubernetes.io/instance: kanidm-svc
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: kanidm-operator
+    app.kubernetes.io/component: service
+    app.kubernetes.io/part-of: kanidm
+    app.kubernetes.io/created-by: kanidm-operator
+spec:
+  selector:
+    app.kubernetes.io/name: kanidm
+  type: ClusterIP
+  sessionAffinity: None
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800
+  ports:
+  - name: https
+    protocol: TCP
+    port: 8443
+    targetPort: 8443
+  - name: ldaps
+    protocol: TCP
+    port: 3636
+    targetPort: 3636

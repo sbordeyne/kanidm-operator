@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - namespace.yaml  # Namespace should be first
+  - account.yaml
+  - group.yaml
+  - kandim.yaml
+  - oauth2-client.yaml
+  - pw-badlist.yaml
+
+namespace: kanidm-system
+
+commonLabels:
+  app.kubernetes.io/name: kanidm-operator
+  app.kubernetes.io/instance: kanidm
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/component: kanidm-operator-crds
+  app.kubernetes.io/part-of: kanidm
+  app.kubernetes.io/version: v0.1.0

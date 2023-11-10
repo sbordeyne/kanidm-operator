@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: kanidm-tls
+  namespace: {{ namespace }}
+  labels:
+    app.kubernetes.io/name: kanidm-certificate
+    app.kubernetes.io/instance: kanidm-certificate
+    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/managed-by: kanidm-operator
+    app.kubernetes.io/component: certificate
+    app.kubernetes.io/part-of: kanidm
+    app.kubernetes.io/created-by: kanidm-operator
+spec:
+  dnsNames:
+  - {{ hostname }}
+  issuerRef:
+    group: cert-manager.io
+    kind: ClusterIssuer
+    name: {{ certificate_issuer }}
+  secretName: kanidm-tls
+  usages:
+  - digital signature
+  - key encipherment
