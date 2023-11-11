@@ -18,6 +18,8 @@ spec:
           type: object
           properties:
             spec:
+              required:
+                - name
               type: object
               properties:
                 name:
