@@ -1,0 +1,34 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kanidm-operator-role-namespaced
+rules:
+  # Framework: posting the events about the handlers progress/errors.
+  - apiGroups: [""]
+    resources: [events]
+    verbs: [create]
+
+  # Application: watching & handling for the custom resource we declare.
+  - apiGroups: [kanidm.github.io]
+    resources: [accounts, groups, oauth2-clients, password-badlists, service-accounts, kanidms]
+    verbs: [list, watch, patch]
+
+  # Application: other resources it produces and manipulates.
+  - apiGroups: [batch, extensions]
+    resources: [cronjobs]
+    verbs: [create, delete]
+  - apiGroups: ["apps"]
+    resources: [deployments]
+    verbs: [create, delete]
+  - apiGroups: [""]
+    resources: [persistentvolumeclaims, secrets, services, configmaps]
+    verbs: [create, delete, get, list, update]
+  - apiGroups: [""]
+    resources: [pods]  # To get the admin/idm_admin passwords post deployment.
+    verbs: [get, list, watch, exec]
+  - apiGroups: ["networking.k8s.io"]
+    resources: [ingresses]
+    verbs: [create, delete, get, list, update]
+  - apiGroups: [cert-manager.io]
+    resources: [certificates]  # Create the TLS certificate/CSR for kanidm (required as it only supports HTTPS)
+    verbs: [list, watch, patch, get, create]

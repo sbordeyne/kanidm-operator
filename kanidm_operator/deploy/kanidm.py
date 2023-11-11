@@ -28,13 +28,14 @@ def _get_secret(username: str, password: str, namespace: str) -> dict[str, Any]:
         "type": "Opaque",
         "metadata": {
             "name": username.replace("_", "-"),
-            "namespace": namespace,
+            "namespace": "kanidm-system",
         },
         "data": {
             "username": b64encode(username.encode("utf-8")).decode("utf-8"),
             "password": b64encode(password.encode("utf-8")).decode("utf-8"),
         },
     }
+
 
 @kopf.on.create("kanidm.github.io", "v1alpha1", "kanidms")
 async def on_create_kanidms(
@@ -169,8 +170,8 @@ async def on_create_kanidms(
             kopf.adopt(admin_secret)
             idm_admin_secret = _get_secret("idm_admin", idm_admin_password, namespace)
             kopf.adopt(idm_admin_secret)
-            core.create_namespaced_secret(namespace, admin_secret)
-            core.create_namespaced_secret(namespace, idm_admin_secret)
+            core.create_namespaced_secret("kanidm-system", admin_secret)
+            core.create_namespaced_secret("kanidm-system", idm_admin_secret)
 
 
 @kopf.on.update("kanidm.github.io", "v1alpha1", "kanidms")

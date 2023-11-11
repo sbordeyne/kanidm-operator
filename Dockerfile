@@ -1,21 +1,18 @@
-FROM kanidm/tools:latest as tools
-FROM opensuse/python:latest
+FROM python:3.10-alpine
 WORKDIR /app
 
-# Copy kanidm binary from tools image
-COPY --from=tools /sbin/kanidm /bin/kanidm
+# Install pipx (tooling: poetry)
+RUN pip3 install --user pipx
+ENV PATH=/root/.local/bin:$PATH
+RUN pipx ensurepath
+
+RUN pipx install poetry
+RUN poetry config virtualenvs.create true
 
 # Install python dependencies
-
 COPY poetry.lock /app/poetry.lock
 COPY pyproject.toml /app/pyproject.toml
-RUN pip install poetry
-RUN python3 -m poetry config virtualenvs.create true
-RUN python3 -m poetry install --only=main --no-root
-
-# Copy the rest of the app
-
 COPY kanidm_operator /app/kanidm_operator
-RUN python3 -m poetry install --only=main
+RUN poetry install --only=main
 
-CMD ["python3", "-m", "kanidm_operator"]
+ENTRYPOINT ["poetry", "run", "kopf", "run"]

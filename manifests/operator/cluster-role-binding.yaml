@@ -1,11 +1,12 @@
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-  name: kanidm-operator-rolebinding-namespaced
+  name: kanidm-operator-rolebinding-cluster
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: kanidm-operator-role-namespaced
+  kind: ClusterRole
+  name: kanidm-operator-role-cluster
 subjects:
   - kind: ServiceAccount
     name: kanidm-operator-account
+    namespace: "kanidm-system"

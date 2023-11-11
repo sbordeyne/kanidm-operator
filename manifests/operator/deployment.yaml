@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kanidm-operator
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kanidm-operator
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kanidm-operator
+    spec:
+      serviceAccountName: kanidm-operator-account
+      containers:
+      - name: kanidm-operator
+        image: kanidm-operator
+        imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8080
+        args:
+          - --liveness=http://0.0.0.0:8080/healthz
+          - --standalone
+          - --all-namespaces
+          - --verbose
+          - --module /app/kanidm_operator

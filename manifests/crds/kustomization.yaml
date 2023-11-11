@@ -8,6 +8,7 @@ resources:
   - kandim.yaml
   - oauth2-client.yaml
   - pw-badlist.yaml
+  - service-account.yaml
 
 namespace: kanidm-system
 
