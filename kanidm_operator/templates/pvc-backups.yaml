@@ -2,11 +2,11 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: kanidm-backups
-  namespace: kanidm
+  namespace: {{ namespace }}
   labels:
     app.kubernetes.io/name: kanidm-backups
     app.kubernetes.io/instance: kanidm-backups
-    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/version: {{ version }}
     app.kubernetes.io/managed-by: kanidm-operator
     app.kubernetes.io/component: pvc-backups
     app.kubernetes.io/part-of: kanidm

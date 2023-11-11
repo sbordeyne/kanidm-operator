@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kanidm
     app.kubernetes.io/instance: kanidm
-    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/version: {{ version }}
     app.kubernetes.io/managed-by: kanidm-operator
     app.kubernetes.io/component: deployment
     app.kubernetes.io/part-of: kanidm
@@ -26,7 +26,7 @@ spec:
       containers:
       - name:  kanidm
         image:  {{ image }}
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         securityContext:
           runAsUser: 1000
           runAsGroup: 1000
@@ -38,8 +38,10 @@ spec:
             cpu: 100m
             memory: 100Mi
         ports:
-        - containerPort:  80
-          name:  http
+        - containerPort:  {{ http_port }}
+          name:  https
+        - containerPort:  {{ ldap_port }}
+          name:  ldaps
         volumeMounts:
         - name: config
           mountPath: /data/server.toml

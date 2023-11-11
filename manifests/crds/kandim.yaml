@@ -19,16 +19,25 @@ spec:
           properties:
             spec:
               type: object
+              required:
+                - version
+                - database
+                - domain
+                - certificate
               properties:
+                version:
+                  type: string
+                  pattern: ^\d+\.\d+\.\d+(-(alpha|beta|rc)\.?\d+)$
                 webPort:
                   type: number
                 ldapPort:
                   type: number
                 database:
                   type: object
+                  required:
+                    - storageClass
+                    - storageSize
                   properties:
-                    path:
-                      type: string
                     fsType:
                       type: string
                       enum:
@@ -36,13 +45,11 @@ spec:
                         - other
                     arcSize:
                       type: number
-                tls:
-                  type: object
-                  properties:
-                    chain:
+                    storageClass:
                       type: string
-                    key:
+                    storageSize:
                       type: string
+                      pattern: ^\d+[EPTGMK]i?$
                 logLevel:
                   type: string
                   enum:
@@ -53,12 +60,11 @@ spec:
                     - fatal
                 domain:
                   type: string
-                role:
-                  type: string
-                  enum:
-                    - WriteReplica
-                    - WriteReplicaNoUI
-                    - ReadOnlyReplica
+                certificate:
+                  type: object
+                  properties:
+                    issuer:
+                      type: string
                 backup:
                   type: object
                   properties:
@@ -66,8 +72,14 @@ spec:
                       type: boolean
                     schedule:
                       type: string
+                      pattern: ^(@(annually|yearly|monthly|weekly|daily|hourly|reboot))|(@every (\d+(ns|us|µs|ms|s|m|h))+)|((((\d+,)+\d+|(\d+(\/|-)\d+)|\d+|\*) ?){5,7})$
                     versions:
                       type: number
+                    storageClass:
+                      type: string
+                    storageSize:
+                      type: string
+                      pattern: ^\d+[EPTGMK]i?$
                 highAvailability:
                   type: object
                   properties:
@@ -75,3 +87,17 @@ spec:
                       type: boolean
                     replicas:
                       type: number
+                ingress:
+                  type: object
+                  properties:
+                    enabled:
+                      type: boolean
+                    reverseProxy:
+                      type: string
+                      enum:
+                        - nginx
+                        - traefik
+                        - caddy
+                        - haproxy
+                    trustXForwardedFor:
+                      type: boolean

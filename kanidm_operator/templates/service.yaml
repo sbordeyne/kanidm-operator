@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kanidm-svc
     app.kubernetes.io/instance: kanidm-svc
-    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/version: {{ version }}
     app.kubernetes.io/managed-by: kanidm-operator
     app.kubernetes.io/component: service
     app.kubernetes.io/part-of: kanidm
@@ -22,9 +22,9 @@ spec:
   ports:
   - name: https
     protocol: TCP
-    port: 8443
-    targetPort: 8443
+    port: {{ http_port }}
+    targetPort: {{ http_port }}
   - name: ldaps
     protocol: TCP
-    port: 3636
-    targetPort: 3636
+    port: {{ ldap_port }}
+    targetPort: {{ ldap_port }}

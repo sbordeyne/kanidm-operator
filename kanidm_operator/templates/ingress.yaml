@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kanidm
+  annotations:
+    {% for key, value in annotations.items() %}
+    {{ key }}: {{ value }}
+    {% endfor %}
+    cert-manager.io/cluster-issuer: {{ certificate_issuer }}
+spec:
+  tls:
+  - hosts:
+    - {{ hostname }}
+    secretName: kanidm-cert-prod
+  rules:
+  - host: {{ hostname }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kanidm-svc
+            port:
+              number: {{ http_port }}

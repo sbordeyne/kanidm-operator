@@ -1,0 +1,27 @@
+apiVersion: v1alpha1
+kind: Kanidm
+metadata:
+  name: kanidm
+  namespace: kanidm
+spec:
+  version: 1.1.0-beta.13
+  database:
+    fsType: other
+    arcSize: 2048
+    storageClass: nfs-client
+    storageSize: 1Gi
+  domain: idm.example.com
+  certificate:
+    issuer: cluster-issuer
+  logLevel: info
+  backup:
+    enabled: true
+    schedule: "0 0 * * *"
+    versions: 7
+    storageClass: nfs-client
+    storageSize: 7Gi
+  webPort: 8443
+  ldapPort: 3890
+  highAvailability:
+    enabled: false
+    replicas: 1

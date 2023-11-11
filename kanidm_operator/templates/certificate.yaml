@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: kanidm-certificate
     app.kubernetes.io/instance: kanidm-certificate
-    app.kubernetes.io/version: "0.1"
+    app.kubernetes.io/version: {{ version }}
     app.kubernetes.io/managed-by: kanidm-operator
     app.kubernetes.io/component: certificate
     app.kubernetes.io/part-of: kanidm
