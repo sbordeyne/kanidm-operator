@@ -1,11 +1,16 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: kanidm
+  name: kanidm-ingress
   annotations:
     {% for key, value in annotations.items() %}
     {{ key }}: {{ value }}
     {% endfor %}
+    {% if ingress_controller == "caddy" and "kubernetes.io/ingress.class" not in annotations%}
+    kubernetes.io/ingress.class: caddy
+    {% endif %}
+    {% if ingress_controller == "nginx "%}
+
     cert-manager.io/cluster-issuer: {{ certificate_issuer }}
 spec:
   tls:

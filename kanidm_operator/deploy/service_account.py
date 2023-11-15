@@ -3,28 +3,30 @@ from logging import Logger
 import kopf
 from kanidm import KanidmClient
 
-from kanidm_operator.typing.account import AccountResource
+from kanidm_operator.typing.service_account import ServiceAccountResource
 
 
-@kopf.on.create("kanidm.github.io", "v1alpha1", "accounts")
+@kopf.on.create("kanidm.github.io", "v1alpha1", "service-accounts")
 async def on_create_account(
-    spec: AccountResource,
+    spec: ServiceAccountResource,
     name: str,
     namespace: str,
     logger: Logger,
     **kwargs,
 ):
     client = KanidmClient()
-    await client.person_account_create(
+    response = await client.service_account_create(
         name=spec["name"],
         display_name=spec["displayName"],
     )
-    # Client not ready yet for emails/group add/legal name yet
+    await client.service_account_generate_api_token(
+        name=spec["name"],
+    )
 
 
-@kopf.on.update("kanidm.github.io", "v1alpha1", "accounts")
+@kopf.on.update("kanidm.github.io", "v1alpha1", "service-accounts")
 async def on_update_account(
-    spec: AccountResource,
+    spec: ServiceAccountResource,
     name: str,
     namespace: str,
     logger: Logger,
@@ -38,9 +40,9 @@ async def on_update_account(
     # Client not ready yet for emails/group add/legal name yet
 
 
-@kopf.on.delete("kanidm.github.io", "v1alpha1", "accounts")
+@kopf.on.delete("kanidm.github.io", "v1alpha1", "service-accounts")
 async def on_delete_account(
-    spec: AccountResource,
+    spec: ServiceAccountResource,
     name: str,
     namespace: str,
     logger: Logger,

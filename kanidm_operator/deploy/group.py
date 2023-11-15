@@ -8,7 +8,11 @@ from kanidm_operator.typing.group import GroupResource
 
 @kopf.on.create("kanidm.github.io", "v1alpha1", "groups")
 async def on_create_group(
-    spec: GroupResource, name: str, namespace: str, logger: Logger, **kwargs,
+    spec: GroupResource,
+    name: str,
+    namespace: str,
+    logger: Logger,
+    **kwargs,
 ):
     client = KanidmClient()
     await client.group_create(
@@ -18,7 +22,10 @@ async def on_create_group(
 
 @kopf.on.field("kanidm.github.io", "v1alpha1", "groups", field="spec.name")
 async def on_update_group(
-    old: str, new: str, status: str, namespace: str,
+    old: str,
+    new: str,
+    status: str,
+    namespace: str,
 ):
     client = KanidmClient()
     await client.group_delete(
@@ -31,7 +38,11 @@ async def on_update_group(
 
 @kopf.on.delete("kanidm.github.io", "v1alpha1", "groups")
 async def on_delete_group(
-    spec: GroupResource, name: str, namespace: str, logger: Logger, **kwargs,
+    spec: GroupResource,
+    name: str,
+    namespace: str,
+    logger: Logger,
+    **kwargs,
 ):
     client = KanidmClient()
     await client.group_delete(

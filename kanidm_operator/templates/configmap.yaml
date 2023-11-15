@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kanidm-config
+  namespace: {{ namespace }}
+  labels:
+    app.kubernetes.io/name: kanidm
+    app.kubernetes.io/instance: kanidm
+    app.kubernetes.io/version: {{ version }}
+    app.kubernetes.io/managed-by: kanidm-operator
+    app.kubernetes.io/component: {% block component %}{% endblock %}
+    app.kubernetes.io/part-of: kanidm
+    app.kubernetes.io/created-by: kanidm-operator
+data:
+  server.toml: |
+    {% block data %}
+    {% endblock %}

@@ -11,10 +11,14 @@ packages = [{include = "kanidm_operator"}]
 python = "^3.11"
 kubernetes = "^28.1.0"
 tomli = "^2.0.1"
-kanidm = "^0.0.3"
 kopf = "^1.36.2"
 jinja2 = "^3.1.2"
 ruamel-yaml = "^0.18.5"
+
+[tool.poetry.dependencies.kanidm]
+git = "git@github.com:yaleman/kanidm.git"
+branch = "yaleman/issue282"
+subdirectory = "pykanidm"
 
 [tool.poetry.group.dev.dependencies]
 pylama = "^8.4.1"

@@ -1,115 +1,24 @@
-#   The webserver bind address. Requires TLS certificates.
-#   If the port is set to 443 you may require the
-#   NET_BIND_SERVICE capability.
-#   Defaults to "127.0.0.1:8443"
-bindaddress = "0.0.0.0:{{ http_port }}"
-#
-#   The read-only ldap server bind address. Requires
-#   TLS certificates. If set to 636 you may require
-#   the NET_BIND_SERVICE capability.
-#   Defaults to "" (disabled)
-ldapbindaddress = "0.0.0.0:{{ ldap_port }}"
-#
-#   HTTPS requests can be reverse proxied by a loadbalancer.
-#   To preserve the original IP of the caller, these systems
-#   will often add a header such as "Forwarded" or
-#   "X-Forwarded-For". If set to true, then this header is
-#   respected as the "authoritative" source of the IP of the
-#   connected client. If you are not using a load balancer
-#   then you should leave this value as default.
-#   Defaults to false
-trust_x_forward_for = {{ str(trust_x_forwarded_for).lower() }}
-#
-#   The path to the kanidm database.
-db_path = "/db/kanidm.db"
-#
-#   If you have a known filesystem, kanidm can tune database
-#   to match. Valid choices are:
-#   [zfs, other]
-#   If you are unsure about this leave it as the default
-#   (other). After changing this
-#   value you must run a vacuum task.
-#   - zfs:
-#     * sets database pagesize to 64k. You must set
-#       recordsize=64k on the zfs filesystem.
-#   - other:
-#     * sets database pagesize to 4k, matching most
-#       filesystems block sizes.
-db_fs_type = "{{ db_fs_type }}"
-#
-#   The number of entries to store in the in-memory cache.
-#   Minimum value is 256. If unset
-#   an automatic heuristic is used to scale this.
-{% if db_arc_size is not None %}
-db_arc_size = {{ db_arc_size }}
-{% endif %}
-#
-#   TLS chain and key in pem format. Both must be present
-tls_chain = "/certs/tls.crt"
-tls_key = "/certs/tls.key"
-#
-#   The log level of the server. May be one of info, debug, trace
-#
-#   NOTE: this is overridden by environment variables at runtime
-#   Defaults to "info"
-log_level = "{{ log_level }}"
-#
-#   The DNS domain name of the server. This is used in a
-#   number of security-critical contexts
-#   such as webauthn, so it *must* match your DNS
-#   hostname. It is used to create
-#   security principal names such as `william@idm.example.com`
-#   so that in a (future)
-#   trust configuration it is possible to have unique Security
-#   Principal Names (spns) throughout the topology.
-#   ⚠️  WARNING ⚠️
-#   Changing this value WILL break many types of registered
-#   credentials for accounts
-#   including but not limited to webauthn, oauth tokens, and more.
-#   If you change this value you *must* run
-#   `kanidmd domain_name_change` immediately after.
-domain = "{{ domain }}"
-#
-#   The origin for webauthn. This is the url to the server,
-#   with the port included if
-#   it is non-standard (any port except 443). This must match
-#   or be a descendent of the
-#   domain name you configure above. If these two items are
-#   not consistent, the server WILL refuse to start!
-#   origin = "https://idm.example.com"
-origin = "https://{{ domain }}"
-#
-#   The role of this server. This affects available features
-#   and how replication may interact.
-#   Valid roles are:
-#   - WriteReplica
-#     This server provides all functionality of Kanidm. It
-#     allows authentication, writes, and
-#     the web user interface to be served.
-#   - WriteReplicaNoUI
-#     This server is the same as a WriteReplica, but does NOT
-#     offer the web user interface.
-#   - ReadOnlyReplica
-#     This server will not writes initiated by clients. It
-#     supports authentication and reads,
-#     and must have a replication agreement as a source of
-#     its data.
-#   Defaults to "WriteReplica".
-role = "{{ role }}"
-#
-{% if backup_enabled %}
-[online_backup]
-#   The path to the output folder for online backups
-path = "/backups/"
-#   The schedule to run online backups (see https://crontab.guru/)
-#   every day at 22:00 UTC (default)
-schedule = "{{ backup_schedule }}"
-#    four times a day at 3 minutes past the hour, every 6th hours
-# schedule = "03 */6 * * *"
-#   We also support non standard cron syntax, with the following format:
-#   sec  min   hour   day of month   month   day of week   year
-#   (it's very similar to the standard cron syntax, it just allows to specify the seconds
-#   at the beginning and the year at the end)
-#   Number of backups to keep (default 7)
-versions = {{ backup_versions }}
-{% endif %}
+{% extends "configmap.yaml" %}
+{% block component %}server-config{% endblock %}
+{% block data %}
+    bindaddress = "0.0.0.0:{{ http_port | default(8443) }}"
+    ldapbindaddress = "0.0.0.0:{{ ldap_port | default(3630) }}"
+    trust_x_forward_for = {{ trust_x_forwarded_for | default(False) | lower }}
+    db_path = "/db/kanidm.db"
+    db_fs_type = "{{ db_fs_type | default('other') }}"
+    {% if db_arc_size %}
+    db_arc_size = {{ db_arc_size }}
+    {% endif %}
+    tls_chain = "/certs/tls.crt"
+    tls_key = "/certs/tls.key"
+    log_level = "{{ log_level | default('info') }}"
+    domain = "{{ domain }}"
+    origin = "https://{{ domain }}"
+    role = "{{ role | default('WriteReplica') }}"
+    {% if backup_enabled %}
+    [online_backup]
+    path = "/backups/"
+    schedule = "{{ backup_schedule | default('0 22 * * *') }}"
+    versions = {{ backup_versions | default(7) }}
+    {% endif %}
+{% endblock %}
