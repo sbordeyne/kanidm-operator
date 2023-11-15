@@ -1,0 +1,15 @@
+apiVersion: skaffold/v4beta6
+kind: Config
+metadata:
+  name: kanidm-operator
+build:
+  artifacts:
+    - image: kanidm-operator
+      docker:
+        dockerfile: Dockerfile
+manifests:
+  kustomize:
+    paths:
+      - manifests/crds
+      - manifests/operator
+

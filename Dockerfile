@@ -6,6 +6,9 @@ RUN pip3 install --user pipx
 ENV PATH=/root/.local/bin:$PATH
 RUN pipx ensurepath
 
+RUN apk add build-base
+RUN apk add libffi-dev
+
 RUN pipx install poetry
 RUN poetry config virtualenvs.create true
 

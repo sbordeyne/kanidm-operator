@@ -20,12 +20,7 @@ def b64enc(value: Any, encoding="utf-8") -> str:
 
 
 def slugify(value: str) -> str:
-    return (
-        value
-        .lower()
-        .replace(" ", "-")
-        .replace("_", "-")
-    )
+    return value.lower().replace(" ", "-").replace("_", "-")
 
 
 class Deployer:
@@ -161,9 +156,7 @@ class Deployer:
             "namespace": self.namespace,
             "version": self.version,
         }
-        template = self.env.get_template(
-            name=template_name, globals=variables
-        )
+        template = self.env.get_template(name=template_name, globals=variables)
         rendered_yaml = template.render(**extra_variables)
         resource = self.yaml.load(rendered_yaml)
         kopf.adopt(resource)
