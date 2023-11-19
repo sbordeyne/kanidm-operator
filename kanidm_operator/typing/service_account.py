@@ -29,6 +29,5 @@ class ServiceAccountResource(TypedDict):
     expiresAt: str | None
     beginFrom: str | None
     secret: SecretResource
-    groups: list[str] | None
     ssh: list[SSHKeyResource | SSHGenerateResource] | None
     tokens: list[TokenResource] | None

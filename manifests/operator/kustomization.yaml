@@ -10,7 +10,7 @@ resources:
   - role-binding.yaml
   - cluster-role-binding.yaml
   - deployment.yaml
-  - rotate-tokens.cronjob.yaml
+  # - rotate-tokens.cronjob.yaml
 
 namespace: kanidm-system
 
@@ -24,4 +24,4 @@ commonLabels:
 images:
   - name: kanidm-operator
     newName: sbordeyne/kanidm-operator
-    newTag: 1.1.0-beta.13
+    newTag: 1.1.0-beta.13-1

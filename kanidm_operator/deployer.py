@@ -10,7 +10,7 @@ from kubernetes.client import (
     NetworkingV1Api,
 )
 import kopf
-from ruamel import yaml
+import yaml
 
 
 def b64enc(value: Any, encoding="utf-8") -> str:

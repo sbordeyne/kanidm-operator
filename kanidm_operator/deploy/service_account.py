@@ -1,20 +1,20 @@
 from logging import Logger
 
 import kopf
-from kanidm import KanidmClient
 
+from kanidm_operator.auth import InClusterKanidmClient
 from kanidm_operator.typing.service_account import ServiceAccountResource
 
 
 @kopf.on.create("kanidm.github.io", "v1alpha1", "service-accounts")
-async def on_create_account(
+async def on_create_service_account(
     spec: ServiceAccountResource,
     name: str,
     namespace: str,
     logger: Logger,
     **kwargs,
 ):
-    client = KanidmClient()
+    client = InClusterKanidmClient()
     response = await client.service_account_create(
         name=spec["name"],
         display_name=spec["displayName"],
@@ -32,7 +32,7 @@ async def on_update_account(
     logger: Logger,
     **kwargs,
 ):
-    client = KanidmClient()
+    client = InClusterKanidmClient()
     await client.person_account_update(
         name=spec["name"],
         display_name=spec["displayName"],
@@ -48,7 +48,7 @@ async def on_delete_account(
     logger: Logger,
     **kwargs,
 ):
-    client = KanidmClient()
+    client = InClusterKanidmClient()
     await client.person_account_delete(
         name=spec["name"],
     )
