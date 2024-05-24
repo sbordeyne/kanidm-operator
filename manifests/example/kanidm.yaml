@@ -1,4 +1,4 @@
-apiVersion: v1alpha1
+apiVersion: kanidm.github.io/v1alpha1
 kind: Kanidm
 metadata:
   name: kanidm

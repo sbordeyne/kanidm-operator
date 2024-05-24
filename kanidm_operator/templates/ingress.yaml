@@ -9,8 +9,9 @@ metadata:
     {% if ingress_controller == "caddy" and "kubernetes.io/ingress.class" not in annotations%}
     kubernetes.io/ingress.class: caddy
     {% endif %}
-    {% if ingress_controller == "nginx "%}
-
+    {% if ingress_controller == "nginx" and "kubernetes.io/ingress.class" not in annotations%}
+    kubernetes.io/ingress.class: nginx
+    {% endif %}
     cert-manager.io/cluster-issuer: {{ certificate_issuer }}
 spec:
   tls:

@@ -20,6 +20,7 @@ RUN mkdir -p -m 0600 ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 RUN pipx install poetry
 RUN poetry config virtualenvs.create true
+RUN poetry config virtualenvs.in-project true
 
 # Install python dependencies
 COPY poetry.lock /app/poetry.lock
@@ -28,4 +29,9 @@ COPY kanidm_operator /app/kanidm_operator
 COPY README.md /app/README.md
 RUN --mount=type=ssh poetry install --only=main --no-interaction --no-ansi
 
-ENTRYPOINT ["poetry", "run", "kopf", "run"]
+FROM python:3.11-alpine as final
+
+WORKDIR /app
+COPY --from=base /app .
+ENV PATH /app/.venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ENTRYPOINT ["python3", "-m", "kopf", "run"]
